@@ -28,6 +28,9 @@ func Join(errs ...error) error {
 }
 
 func Wrap(err error, attrs ...ErrorAttribute) error {
+	if err == nil {
+		return nil
+	}
 	return wrapInternal(err, attrs)
 }
 
