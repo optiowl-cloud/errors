@@ -2,9 +2,13 @@ package errors
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"log/slog"
 )
+
+var reportErrorToHuman bool = os.Getenv("REPORT_ERROR_TO_HUMAN") == "true"
 
 type Severity string
 
@@ -31,6 +35,10 @@ func ReportWithSeverity(ctx context.Context, err error, severity Severity) {
 		ctx, "error: "+err.Error(),
 		SlogErr(err), slog.String("severity", severity.String()),
 	)
+
+	if reportErrorToHuman {
+		fmt.Printf("error: %s\nseverity: %s\n%+v\n", err.Error(), severity.String(), err)
+	}
 }
 
 func Report(ctx context.Context, err error) {
